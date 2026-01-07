@@ -23,6 +23,6 @@ export class Producto {
   @Column({ type: 'int' })
   inventario: number;
 
-  @ManyToOne(() => Categoria)
+  @ManyToOne(() => Categoria) //{ eager: true } Util para simepre traer los datos relacionados
   categoria: Categoria;
 }

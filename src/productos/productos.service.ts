@@ -30,8 +30,41 @@ export class ProductosService {
     });
   }
 
-  findAll() {
-    return `This action returns all productos`;
+  async findAll(categoriaId: number | null) {
+    if (categoriaId) {
+      const [productos, total] = await this.productRepository.findAndCount({
+        where: {
+          categoria: {
+            id: categoriaId,
+          },
+        },
+        relations: {
+          categoria: true,
+        },
+        order: {
+          id: 'DESC',
+        },
+      });
+
+      return {
+        productos,
+        total,
+      };
+    }
+
+    const [productos, total] = await this.productRepository.findAndCount({
+      relations: {
+        categoria: true,
+      },
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return {
+      productos,
+      total,
+    };
   }
 
   findOne(id: number) {
