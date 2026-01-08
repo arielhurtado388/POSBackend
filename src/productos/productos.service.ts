@@ -91,7 +91,9 @@ export class ProductosService {
     return await this.productRepository.save(producto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} producto`;
+  async remove(id: number) {
+    const producto = await this.findOne(id);
+    await this.productRepository.remove(producto);
+    return 'Producto eliminado';
   }
 }
