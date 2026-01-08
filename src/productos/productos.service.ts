@@ -59,12 +59,36 @@ export class ProductosService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} producto`;
+  async findOne(id: number) {
+    const producto = await this.productRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        categoria: true,
+      },
+    });
+    if (!producto) {
+      throw new NotFoundException(`El producto con el id: ${id} no existe`);
+    }
+    return producto;
   }
 
-  update(id: number, updateProductoDto: UpdateProductoDto) {
-    return `This action updates a #${id} producto`;
+  async update(id: number, updateProductoDto: UpdateProductoDto) {
+    const producto = await this.findOne(id);
+    Object.assign(producto, updateProductoDto);
+    if (updateProductoDto.categoriaId) {
+      const categoria = await this.categoryRepository.findOneBy({
+        id: updateProductoDto.categoriaId,
+      });
+      if (!categoria) {
+        let errores: string[] = [];
+        errores.push('La categoría no existe');
+        throw new NotFoundException(errores);
+      }
+      producto.categoria = categoria;
+    }
+    return await this.productRepository.save(producto);
   }
 
   remove(id: number) {

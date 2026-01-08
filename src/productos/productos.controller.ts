@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { GetProductoQueryDto } from './dto/get-product.dto';
+import { ValidacionIdPipe } from 'src/common/pipes/validacion-id/validacion-id.pipe';
 
 @Controller('productos')
 export class ProductosController {
@@ -31,20 +33,20 @@ export class ProductosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ValidacionIdPipe) id: string) {
     return this.productosService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ValidacionIdPipe) id: string,
     @Body() updateProductoDto: UpdateProductoDto,
   ) {
     return this.productosService.update(+id, updateProductoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ValidacionIdPipe) id: string) {
     return this.productosService.remove(+id);
   }
 }

@@ -23,6 +23,9 @@ export class Producto {
   @Column({ type: 'int' })
   inventario: number;
 
+  @Column({ type: 'int' })
+  categoriaId: number;
+
   @ManyToOne(() => Categoria) //{ eager: true } Util para simepre traer los datos relacionados
   categoria: Categoria;
 }
