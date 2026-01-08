@@ -30,7 +30,7 @@ export class ProductosService {
     });
   }
 
-  async findAll(categoriaId: number | null) {
+  async findAll(categoriaId: number | null, take: number, skip: number) {
     const opciones: FindManyOptions<Producto> = {
       relations: {
         categoria: true,
@@ -38,6 +38,8 @@ export class ProductosService {
       order: {
         id: 'DESC',
       },
+      take,
+      skip,
     };
 
     if (categoriaId) {
