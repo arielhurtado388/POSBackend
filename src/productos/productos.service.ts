@@ -3,7 +3,7 @@ import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Producto } from './entities/producto.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Categoria } from 'src/categorias/entities/categoria.entity';
 
 @Injectable()
@@ -31,35 +31,25 @@ export class ProductosService {
   }
 
   async findAll(categoriaId: number | null) {
-    if (categoriaId) {
-      const [productos, total] = await this.productRepository.findAndCount({
-        where: {
-          categoria: {
-            id: categoriaId,
-          },
-        },
-        relations: {
-          categoria: true,
-        },
-        order: {
-          id: 'DESC',
-        },
-      });
-
-      return {
-        productos,
-        total,
-      };
-    }
-
-    const [productos, total] = await this.productRepository.findAndCount({
+    const opciones: FindManyOptions<Producto> = {
       relations: {
         categoria: true,
       },
       order: {
         id: 'DESC',
       },
-    });
+    };
+
+    if (categoriaId) {
+      opciones.where = {
+        categoria: {
+          id: categoriaId,
+        },
+      };
+    }
+
+    const [productos, total] =
+      await this.productRepository.findAndCount(opciones);
 
     return {
       productos,
