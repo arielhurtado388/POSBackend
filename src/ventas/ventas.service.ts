@@ -101,8 +101,21 @@ export class VentasService {
     return this.ventaRepository.find(opciones);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} venta`;
+  async findOne(id: number) {
+    const venta = await this.ventaRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        contenido: true,
+      },
+    });
+
+    if (!venta) {
+      throw new NotFoundException('La venta no existe');
+    }
+
+    return venta;
   }
 
   update(id: number, updateVentaDto: UpdateVentaDto) {
