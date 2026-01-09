@@ -7,8 +7,9 @@ import { CreateVentaDto } from './dto/create-venta.dto';
 import { UpdateVentaDto } from './dto/update-venta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContenidoVenta, Venta } from './entities/venta.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Between, FindManyOptions, Repository } from 'typeorm';
 import { Producto } from 'src/productos/entities/producto.entity';
+import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
 
 @Injectable()
 export class VentasService {
@@ -76,12 +77,27 @@ export class VentasService {
     return 'Venta guardada correctamente';
   }
 
-  findAll() {
+  findAll(fecha?: string) {
     const opciones: FindManyOptions<Venta> = {
       relations: {
         contenido: true,
       },
     };
+
+    if (fecha) {
+      const fechaFormateada = parseISO(fecha);
+
+      if (!isValid(fechaFormateada)) {
+        throw new BadRequestException('La fecha no es válida');
+      }
+
+      const inicio = startOfDay(fechaFormateada);
+      const fin = endOfDay(fechaFormateada);
+
+      opciones.where = {
+        fecha: Between(inicio, fin),
+      };
+    }
     return this.ventaRepository.find(opciones);
   }
 

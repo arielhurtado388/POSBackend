@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { VentasService } from './ventas.service';
 import { CreateVentaDto } from './dto/create-venta.dto';
@@ -21,8 +22,8 @@ export class VentasController {
   }
 
   @Get()
-  findAll() {
-    return this.ventasService.findAll();
+  findAll(@Query('fecha') fecha: string) {
+    return this.ventasService.findAll(fecha);
   }
 
   @Get(':id')
