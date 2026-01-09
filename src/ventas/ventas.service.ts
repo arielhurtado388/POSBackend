@@ -27,7 +27,10 @@ export class VentasService {
     await this.productoRepository.manager.transaction(
       async (ventaEntityManager) => {
         const venta = new Venta();
-        venta.total = createVentaDto.total;
+        venta.total = createVentaDto.contenido.reduce(
+          (total, item) => total + item.cantidad * item.precio,
+          0,
+        );
 
         const contenidosVenta: ContenidoVenta[] = [];
 
