@@ -118,11 +118,34 @@ export class VentasService {
     return venta;
   }
 
-  update(id: number, updateVentaDto: UpdateVentaDto) {
-    return `This action updates a #${id} venta`;
-  }
+  async remove(id: number) {
+    const venta = await this.findOne(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} venta`;
+    for (const contenidos of venta.contenido) {
+      const producto = await this.productoRepository.findOneBy({
+        id: contenidos.producto.id,
+      });
+      if (!producto) {
+        throw new NotFoundException('El producto no existe');
+      }
+
+      producto.inventario += contenidos.cantidad;
+      await this.productoRepository.save(producto);
+
+      const contenidoVenta = await this.contenidoVentaRepository.findOneBy({
+        id: contenidos.id,
+      });
+
+      if (contenidoVenta) {
+        await this.contenidoVentaRepository.remove(contenidoVenta);
+      }
+    }
+
+    // Elimina todos los contenidos de la transacción en una sola operación
+    // await this.contenidoVentaRepository.remove(venta.contenido);
+
+    // Elimina la transacción principal
+    await this.ventaRepository.remove(venta);
+    return { message: 'Venta eliminada' };
   }
 }
