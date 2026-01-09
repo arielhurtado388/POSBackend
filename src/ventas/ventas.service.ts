@@ -7,7 +7,7 @@ import { CreateVentaDto } from './dto/create-venta.dto';
 import { UpdateVentaDto } from './dto/update-venta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContenidoVenta, Venta } from './entities/venta.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Producto } from 'src/productos/entities/producto.entity';
 
 @Injectable()
@@ -77,7 +77,12 @@ export class VentasService {
   }
 
   findAll() {
-    return `This action returns all ventas`;
+    const opciones: FindManyOptions<Venta> = {
+      relations: {
+        contenido: true,
+      },
+    };
+    return this.ventaRepository.find(opciones);
   }
 
   findOne(id: number) {
