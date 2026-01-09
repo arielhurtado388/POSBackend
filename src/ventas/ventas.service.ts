@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateVentaDto } from './dto/create-venta.dto';
 import { UpdateVentaDto } from './dto/update-venta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContenidoVenta, Venta } from './entities/venta.entity';
 import { Repository } from 'typeorm';
+import { Producto } from 'src/productos/entities/producto.entity';
 
 @Injectable()
 export class VentasService {
@@ -13,16 +18,57 @@ export class VentasService {
 
     @InjectRepository(ContenidoVenta)
     private readonly contenidoVentaRepository: Repository<ContenidoVenta>,
+
+    @InjectRepository(Producto)
+    private readonly productoRepository: Repository<Producto>,
   ) {}
 
   async create(createVentaDto: CreateVentaDto) {
-    const venta = new Venta();
-    venta.total = createVentaDto.total;
-    await this.ventaRepository.save(venta);
+    await this.productoRepository.manager.transaction(
+      async (ventaEntityManager) => {
+        const venta = new Venta();
+        venta.total = createVentaDto.total;
 
-    for (const contenido of createVentaDto.contenido) {
-      await this.contenidoVentaRepository.save({ ...contenido, venta });
-    }
+        const contenidosVenta: ContenidoVenta[] = [];
+
+        for (const contenido of createVentaDto.contenido) {
+          const producto = await ventaEntityManager.findOneBy(Producto, {
+            id: contenido.productoId,
+          });
+
+          const errores: string[] = [];
+
+          if (!producto) {
+            errores.push(
+              `El producto con el id: ${contenido.productoId} no existe`,
+            );
+            throw new NotFoundException(errores);
+          }
+
+          if (producto.inventario < contenido.cantidad) {
+            errores.push(
+              `El artículo ${producto.nombre} excede la cantidad disponible`,
+            );
+            throw new BadRequestException(errores);
+          }
+
+          // Actualiza el inventario
+          producto.inventario -= contenido.cantidad;
+          await ventaEntityManager.save(producto);
+
+          //  Crear instancia de contenido venta
+          const contenidoVenta = new ContenidoVenta();
+          contenidoVenta.precio = contenido.precio;
+          contenidoVenta.producto = producto;
+          contenidoVenta.cantidad = contenido.cantidad;
+          contenidoVenta.venta = venta;
+          contenidosVenta.push(contenidoVenta);
+        }
+        // Guarda la transacción solo si todas las validaciones pasaron
+        await ventaEntityManager.save(venta);
+        await ventaEntityManager.save(contenidosVenta);
+      },
+    );
 
     return 'Venta guardada correctamente';
   }
