@@ -11,7 +11,7 @@ import {
 import { VentasService } from './ventas.service';
 import { CreateVentaDto } from './dto/create-venta.dto';
 import { UpdateVentaDto } from './dto/update-venta.dto';
-import { ValidacionIdPipe } from 'src/common/pipes/validacion-id/validacion-id.pipe';
+import { ValidacionIdPipe } from '../common/pipes/validacion-id/validacion-id.pipe';
 
 @Controller('ventas')
 export class VentasController {

@@ -8,9 +8,9 @@ import { UpdateVentaDto } from './dto/update-venta.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContenidoVenta, Venta } from './entities/venta.entity';
 import { Between, FindManyOptions, Repository } from 'typeorm';
-import { Producto } from 'src/productos/entities/producto.entity';
+import { Producto } from '../productos/entities/producto.entity';
 import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
-import { CuponesService } from 'src/cupones/cupones.service';
+import { CuponesService } from '../cupones/cupones.service';
 
 @Injectable()
 export class VentasService {

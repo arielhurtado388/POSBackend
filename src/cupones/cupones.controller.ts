@@ -12,7 +12,7 @@ import {
 import { CuponesService } from './cupones.service';
 import { CreateCuponeDto } from './dto/create-cupone.dto';
 import { UpdateCuponeDto } from './dto/update-cupone.dto';
-import { ValidacionIdPipe } from 'src/common/pipes/validacion-id/validacion-id.pipe';
+import { ValidacionIdPipe } from '../common/pipes/validacion-id/validacion-id.pipe';
 import { AplicarCuponDto } from './dto/aplicarCupon.dto';
 
 @Controller('cupones')

@@ -13,7 +13,7 @@ import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { GetProductoQueryDto } from './dto/get-product.dto';
-import { ValidacionIdPipe } from 'src/common/pipes/validacion-id/validacion-id.pipe';
+import { ValidacionIdPipe } from '../common/pipes/validacion-id/validacion-id.pipe';
 
 @Controller('productos')
 export class ProductosController {

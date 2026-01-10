@@ -3,8 +3,8 @@ import { VentasService } from './ventas.service';
 import { VentasController } from './ventas.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContenidoVenta, Venta } from './entities/venta.entity';
-import { Producto } from 'src/productos/entities/producto.entity';
-import { CuponesModule } from 'src/cupones/cupones.module';
+import { Producto } from '../productos/entities/producto.entity';
+import { CuponesModule } from '../cupones/cupones.module';
 
 @Module({
   imports: [
