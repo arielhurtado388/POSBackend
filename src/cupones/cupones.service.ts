@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateCuponeDto } from './dto/create-cupone.dto';
 import { UpdateCuponeDto } from './dto/update-cupone.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cupon } from './entities/cupone.entity';
 import { Repository } from 'typeorm';
+import { endOfDay, isAfter } from 'date-fns';
 
 @Injectable()
 export class CuponesService {
@@ -40,5 +45,27 @@ export class CuponesService {
     const cupon = await this.findOne(id);
     await this.cuponRepository.remove(cupon);
     return 'Cupón eliminado';
+  }
+
+  async aplicarCupon(nombre: string) {
+    const cupon = await this.cuponRepository.findOneBy({
+      nombre,
+    });
+
+    if (!cupon) {
+      throw new NotFoundException('El cupón no existe');
+    }
+
+    const fechaActual = new Date();
+    const fechaExpiracion = endOfDay(cupon.fechaExpiracion);
+
+    if (isAfter(fechaActual, fechaExpiracion)) {
+      throw new UnprocessableEntityException('El cupón ya expiró');
+    }
+
+    return {
+      message: 'El cupón es válido',
+      ...cupon,
+    };
   }
 }

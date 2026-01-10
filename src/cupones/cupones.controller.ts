@@ -6,11 +6,14 @@ import {
   Param,
   Delete,
   Put,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CuponesService } from './cupones.service';
 import { CreateCuponeDto } from './dto/create-cupone.dto';
 import { UpdateCuponeDto } from './dto/update-cupone.dto';
 import { ValidacionIdPipe } from 'src/common/pipes/validacion-id/validacion-id.pipe';
+import { AplicarCuponDto } from './dto/aplicarCupon.dto';
 
 @Controller('cupones')
 export class CuponesController {
@@ -42,5 +45,11 @@ export class CuponesController {
   @Delete(':id')
   remove(@Param('id', ValidacionIdPipe) id: string) {
     return this.cuponesService.remove(+id);
+  }
+
+  @Post('/aplicar')
+  @HttpCode(HttpStatus.OK)
+  aplicarCupon(@Body() aplicarCuponDto: AplicarCuponDto) {
+    return this.cuponesService.aplicarCupon(aplicarCuponDto.nombre);
   }
 }
