@@ -13,6 +13,8 @@ export const typeOrmConfig = (
   database: configService.get('DATABASE_NAME'),
   //   ssl: true,
   logging: false,
-  entities: [join(__dirname + '../../**/*.entity.{js, ts}')],
+  entities: [join(__dirname + '../../**/*.entity.{js,ts}')],
+  // entities: [join(__dirname, '../../**/*.entity.{ts,js}')],
+  // entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
   synchronize: true, // No usarlo en produccion
 });
