@@ -15,6 +15,12 @@ export class Venta {
   @Column('decimal')
   total: number;
 
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  cupon: string;
+
+  @Column({ type: 'decimal', nullable: true })
+  descuento: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   fecha: Date;
 

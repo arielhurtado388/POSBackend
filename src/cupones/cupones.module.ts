@@ -8,5 +8,6 @@ import { Cupon } from './entities/cupone.entity';
   imports: [TypeOrmModule.forFeature([Cupon])],
   controllers: [CuponesController],
   providers: [CuponesService],
+  exports: [CuponesService],
 })
 export class CuponesModule {}

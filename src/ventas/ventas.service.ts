@@ -10,6 +10,7 @@ import { ContenidoVenta, Venta } from './entities/venta.entity';
 import { Between, FindManyOptions, Repository } from 'typeorm';
 import { Producto } from 'src/productos/entities/producto.entity';
 import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
+import { CuponesService } from 'src/cupones/cupones.service';
 
 @Injectable()
 export class VentasService {
@@ -22,16 +23,29 @@ export class VentasService {
 
     @InjectRepository(Producto)
     private readonly productoRepository: Repository<Producto>,
+
+    private readonly cuponService: CuponesService,
   ) {}
 
   async create(createVentaDto: CreateVentaDto) {
     await this.productoRepository.manager.transaction(
       async (ventaEntityManager) => {
         const venta = new Venta();
-        venta.total = createVentaDto.contenido.reduce(
+        const total = createVentaDto.contenido.reduce(
           (total, item) => total + item.cantidad * item.precio,
           0,
         );
+        venta.total = total;
+
+        if (createVentaDto.cupon) {
+          const cupon = await this.cuponService.aplicarCupon(
+            createVentaDto.cupon,
+          );
+          const descuento = +((cupon.porcentaje / 100) * total).toFixed(3);
+          venta.descuento = descuento;
+          venta.cupon = cupon.nombre;
+          venta.total -= descuento;
+        }
 
         const contenidosVenta: ContenidoVenta[] = [];
 

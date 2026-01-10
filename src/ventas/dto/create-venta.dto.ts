@@ -29,6 +29,9 @@ export class CreateVentaDto {
   @IsNumber({}, { message: 'La cantidad no es válida' })
   total: number;
 
+  @IsOptional()
+  cupon: string;
+
   @IsArray()
   @ArrayNotEmpty({ message: 'Los contenidos no pueden ir vacios' })
   @ValidateNested()
