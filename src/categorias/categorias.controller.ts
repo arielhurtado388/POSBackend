@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
@@ -30,8 +31,9 @@ export class CategoriasController {
   findOne(
     @Param('id', ValidacionIdPipe)
     id: string,
+    @Query('productos') productos?: string,
   ) {
-    return this.categoriasService.findOne(+id);
+    return this.categoriasService.findOne(+id, productos);
   }
 
   @Patch(':id')
