@@ -88,7 +88,7 @@ export class VentasService {
       },
     );
 
-    return 'Venta guardada correctamente';
+    return { message: 'Venta guardada correctamente' };
   }
 
   findAll(fecha?: string) {
