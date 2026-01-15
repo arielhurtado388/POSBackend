@@ -1,0 +1,20 @@
+meta {
+  name: Next - Obtener ventas
+  type: http
+  seq: 16
+}
+
+get {
+  url: http://localhost:3001/admin/ventas/api?fecha=2026-01-14
+  body: none
+  auth: inherit
+}
+
+params:query {
+  fecha: 2026-01-14
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,16 @@
+meta {
+  name: Productos - Obtener por id
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/productos/5
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

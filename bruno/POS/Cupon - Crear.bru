@@ -1,0 +1,24 @@
+meta {
+  name: Cupon - Crear
+  type: http
+  seq: 11
+}
+
+post {
+  url: http://localhost:3000/cupones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "ENERO-2026",
+    "porcentaje": 5,
+    "fechaExpiracion": "2025-02-09"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

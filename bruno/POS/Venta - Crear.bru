@@ -1,0 +1,35 @@
+meta {
+  name: Venta - Crear
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:3000/ventas
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "total": 45.99,
+    "cupon": "ENERO-2026",
+    "contenido": [
+      {
+        "cantidad": 1,
+        "precio": 9.99,
+        "productoId": 2
+      },
+      {
+        "cantidad": 1,
+        "precio": 9.99,
+        "productoId": 4
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Categoria - Obtener por id y productos opcionales
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3000/categorias/1?productos=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  productos: true
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

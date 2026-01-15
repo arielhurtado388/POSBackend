@@ -1,0 +1,22 @@
+meta {
+  name: Cupon - Aplicar
+  type: http
+  seq: 14
+}
+
+post {
+  url: http://localhost:3000/cupones/aplicar
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "ENERO-2026"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

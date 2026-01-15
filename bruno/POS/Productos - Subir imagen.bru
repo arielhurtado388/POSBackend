@@ -1,0 +1,20 @@
+meta {
+  name: Productos - Subir imagen
+  type: http
+  seq: 17
+}
+
+post {
+  url: http://localhost:3000/productos/cargar-imagen
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/home/ariel/Pictures/Costa.jpg)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
