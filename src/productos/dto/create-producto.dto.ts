@@ -9,6 +9,9 @@ export class CreateProductoDto {
   @IsNumber({ maxDecimalPlaces: 2 }, { message: 'El precio no es válido' })
   precio: number;
 
+  @IsNotEmpty({ message: 'La imagen es obligatoria' })
+  imagen: string;
+
   @IsNotEmpty({ message: 'La cantidad es obligatoria' })
   @IsNumber({ maxDecimalPlaces: 0 }, { message: 'La cantidad no es válida' })
   inventario: number;
