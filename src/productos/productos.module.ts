@@ -4,9 +4,13 @@ import { ProductosController } from './productos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Producto } from './entities/producto.entity';
 import { Categoria } from '../categorias/entities/categoria.entity';
+import { CargarImagenModule } from 'src/cargar-imagen/cargar-imagen.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Producto, Categoria])],
+  imports: [
+    TypeOrmModule.forFeature([Producto, Categoria]),
+    CargarImagenModule,
+  ],
   controllers: [ProductosController],
   providers: [ProductosService],
 })

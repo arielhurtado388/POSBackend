@@ -8,16 +8,24 @@ import {
   Delete,
   Query,
   Put,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { GetProductoQueryDto } from './dto/get-product.dto';
 import { ValidacionIdPipe } from '../common/pipes/validacion-id/validacion-id.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CargarImagenService } from 'src/cargar-imagen/cargar-imagen.service';
 
 @Controller('productos')
 export class ProductosController {
-  constructor(private readonly productosService: ProductosService) {}
+  constructor(
+    private readonly productosService: ProductosService,
+    private readonly cargarImagenService: CargarImagenService,
+  ) {}
 
   @Post()
   create(@Body() createProductoDto: CreateProductoDto) {
@@ -48,5 +56,14 @@ export class ProductosController {
   @Delete(':id')
   remove(@Param('id', ValidacionIdPipe) id: string) {
     return this.productosService.remove(+id);
+  }
+
+  @Post('cargar-imagen')
+  @UseInterceptors(FileInterceptor('file'))
+  cargarImagen(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('La imagen es obligatoria');
+    }
+    return this.cargarImagenService.subirArchivo(file);
   }
 }
